@@ -32,4 +32,21 @@ app.post('/log', (req, res) => {
   res.json({ ok: true });
 });
 
+app.post('/log', (req, res) => {
+  const body = req.body || {};
+  const record = {
+    simulation: true,
+    clicked: !!body.clicked,
+    email_provided: !!body.email_provided,
+    timestamp: body.timestamp || new Date().toISOString(),
+    user_agent: body.user_agent || '',
+    ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress
+  };
+
+  // Just print to terminal instead of saving a file
+  console.log('Simulation event:', record);
+
+  res.json({ ok: true });
+});
+
 app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));

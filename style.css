@@ -1,44 +1,85 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #464444;
+/* Reset and base */
+* {
+  box-sizing: border-box;
   margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #121212;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  height: 100vh;
+  min-height: 100vh;
+  padding-top: 50px;
+  color: #e0e0e0;
 }
 
+/* Banner */
+.banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #333;
+  color: #fff;
+  font-weight: bold;
+  padding: 10px;
+  text-align: center;
+  z-index: 100;
+}
 
-
+/* Card */
 .login-card {
-  background: #000000;
-  margin-top: 100px;
-  padding: 40px;
+  background: #1e1e1e;
+  padding: 40px 30px;
   border-radius: 12px;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.1);
-  width: 360px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  transition: all 0.3s ease;
 }
 
+/* Logo */
 .logo img {
   display: block;
   margin: 0 auto 20px;
+  max-width: 80%;
+  height: auto;
 }
 
+/* Titles */
 .title {
-  font-size: 20px;
+  font-size: 22px;
   margin-bottom: 20px;
-  text-align: center;
+  color: #fff;
 }
 
+/* Inputs */
 input {
   width: 100%;
   padding: 12px;
   margin: 8px 0 16px;
-  border: 1px solid #000000;
+  border: 1px solid #555;
   border-radius: 6px;
   font-size: 14px;
+  background: #2a2a2a;
+  color: #e0e0e0;
+  transition: border 0.3s;
 }
 
+input::placeholder {
+  color: #aaa;
+}
+
+input:focus {
+  border: 1px solid #0b57d0;
+  outline: none;
+}
+
+/* Buttons */
 button {
   width: 100%;
   padding: 12px;
@@ -48,18 +89,50 @@ button {
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
 }
 
 button:hover {
   background: #0845a8;
 }
 
+/* Hint text */
 .hint {
   font-size: 12px;
-  color: #5f6368;
-  text-align: center;
+  color: #aaa;
+  margin-top: 15px;
 }
 
+/* Hidden & step animation */
 .hidden {
   display: none;
+}
+.step {
+  transition: opacity 0.3s ease;
+}
+
+/* Slide-in animation for training message */
+@keyframes slideIn {
+  0% { opacity: 0; transform: translateY(50px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in {
+  animation: slideIn 0.6s ease forwards;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 30px 20px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  button {
+    font-size: 14px;
+  }
 }

