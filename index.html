@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Example Company Sign In</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="banner"></div>
+
+  <div class="login-card" id="login-card">
+    <!-- Logo -->
+    <div class="logo">
+      <img src="logo.jpg" alt="Company Logo" width="150">
+    </div>
+
+    <form id="login-form">
+      <div id="step1">
+        <h1 class="title">Sign in</h1>
+        <input id="email" type="email" placeholder="Enter your work email" required />
+        <button type="button" id="next-btn">Next</button>
+      </div>
+
+      <div id="step2" class="hidden">
+        <h1 class="title">Welcome</h1>
+        <input id="password" type="password" placeholder="Enter password" required />
+        <button type="submit">Sign in</button>
+      </div>
+    </form>
+
+    <p class="hint">Use your company email address</p>
+  </div>
+
+  <script>
+    const nextBtn = document.getElementById("next-btn");
+    const step1 = document.getElementById("step1");
+    const step2 = document.getElementById("step2");
+    const form = document.getElementById("login-form");
+
+    nextBtn.addEventListener("click", () => {
+      if (document.getElementById("email").value.trim()) {
+        step1.classList.add("hidden");
+        step2.classList.remove("hidden");
+      }
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const payload = {
+        simulation: true,
+        clicked: true,
+        email_provided: document.getElementById("email").value.trim().length > 0,
+        timestamp: new Date().toISOString(),
+        user_agent: navigator.userAgent
+      };
+
+      document.getElementById("password").value = "";
+
+      try {
+        await fetch("/log", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      } catch (err) {
+        console.error("Error logging:", err);
+      }
+
+      document.getElementById("login-card").innerHTML = `
+        <h1 class="title">Training Complete</h1>
+        <p>This was a <strong>simulation</strong>. On a real phishing page, your credentials could have been stolen.</p>
+        <ul>
+          <li>Check sender & link before clicking</li>
+          <li>Look for spelling errors</li>
+          <li>When in doubt, report suspicious emails</li>
+        </ul>
+      `;
+    });
+  </script>
+</body>
+</html>
